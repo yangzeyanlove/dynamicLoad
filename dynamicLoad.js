@@ -5,8 +5,17 @@
  */
 // 已加载完成的js数量
 let hadLoadNum = 0
+// 缓存避免多次加载
+const cacheFile = []
 
 const createLink = (url) => {
+  // 是否已经加载过
+  if (cacheFile.indexOf(url) === -1) {
+    cacheFile.push(url)
+  } else {
+    return ''
+  }
+
   const link = document.createElement('link')
   link.type = 'text/css'
   link.rel = 'stylesheet'
@@ -16,6 +25,13 @@ const createLink = (url) => {
 }
 
 const createScript = (url, cb, len) => {
+  // 是否已经加载过
+  if (cacheFile.indexOf(url) === -1) {
+    cacheFile.push(url)
+  } else {
+    return ''
+  }
+
   const script = document.createElement('script')
   script.type = 'text/javascript'
   script.src = url
@@ -27,6 +43,8 @@ const createScript = (url, cb, len) => {
       if (len === hadLoadNum) {
         cb()
       }
+    } else {
+      // 加载失败
     }
   }
 
